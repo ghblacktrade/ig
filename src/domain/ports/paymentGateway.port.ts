@@ -21,8 +21,11 @@ export interface WebhookVerifyInput {
 }
 
 export interface PaymentGatewayPort {
-  createPayin(input: CreatePayinInput): AsyncResult<Payment>;
-  createPayout(input: CreatePayoutInput): AsyncResult<Payment>;
-  getStatus(externalId: string): AsyncResult<Paymen>;
+  createPayIn(input: CreatePayinInput): AsyncResult<Payment>;
+
+  createPayOut(input: CreatePayoutInput): AsyncResult<Payment>;
+
+  getStatus(externalId: string): AsyncResult<Payment>;
+
   verifyWebhook(input: WebhookVerifyInput): AsyncResult<{ event: string; data: any }>;
 }

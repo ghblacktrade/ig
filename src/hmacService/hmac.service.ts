@@ -1,20 +1,23 @@
 import { Injectable } from '@nestjs/common';
 import { createHmac } from 'crypto';
 import { ConfigService } from '@nestjs/config';
+import { ok, Result } from '@src/common/wrappers/response.wrapper';
+import { HmacServiceUseCase } from '@src/hmacService/ports/in/hmacService.useCase';
 
 @Injectable()
-export class HmacService {
+export class HmacService implements HmacServiceUseCase {
   private readonly algo: string;
+
   constructor(private readonly config: ConfigService) {
-    this.algo = this.config.get<string>('app.hmacAlgo', 'sha256');
+    this.algo = this.config.get<string>('APP_HMAC_ALGO') ?? 'sha256';
   }
 
-  signRaw(raw: Buffer | string, secret: string): string {
-    return createHmac(this.algo, secret).update(raw).digest('hex');
+  public signRaw(raw: Buffer | string, secret: string): Result<string> {
+    return ok(createHmac(this.algo, secret).update(raw).digest('hex'));
   }
 
-  signWithTs(raw: Buffer | string, ts: string, secret: string): string {
+  public signWithTs(raw: Buffer | string, ts: string, secret: string): Result<string> {
     const payload = typeof raw === 'string' ? raw : raw.toString('utf8');
-    return createHmac(this.algo, secret).update(`${ts}.${payload}`).digest('hex');
+    return ok(createHmac(this.algo, secret).update(`${ts}.${payload}`).digest('hex'));
   }
 }

@@ -1,4 +1,4 @@
-import { SimpleException } from '@src/common/types/simpleException.type';
+import { SimpleException } from './types/simpleException.type';
 
 export type Result<T, E = SimpleException> = Ok<T, E> | Err<T, E>;
 export type AsyncResult<T, E = SimpleException> = Promise<Result<T, E>>;

@@ -1,0 +1,1 @@
+export const PAYMENT_METHOD = 'online_bank_transfer'

@@ -19,6 +19,8 @@ import { safeEqualUtil } from '@src/hmacService/utils/safeEqual.util';
 import { DeCardSignatureService } from '@src/infrastructure/adapters/decard/decardSignature.service';
 import { expoJitterBackoff } from '@src/interface/http/utils/expoJitterBackoff.util';
 import { mapDecardStatus } from '@src/infrastructure/mappers/status.mapper';
+import { ORDER_CREATE } from '@src/infrastructure/adapters/constants/routes';
+import { PAYMENT_METHOD } from '@src/infrastructure/adapters/constants/constants';
 
 @Injectable()
 export class DeCardAdapter implements PaymentGatewayPort {
@@ -35,18 +37,18 @@ export class DeCardAdapter implements PaymentGatewayPort {
     return { 'Api-sign': sign };
   }
 
-  async createPayIn(input: CreatePayinInput): AsyncResult<Payment, SimpleException> {
+  async createPayIn(input: CreatePayinInput): AsyncResult<Payment> {
     if (input.currency !== Currency.TRY) {
       return err(new SimpleException(ERRORS.CURRENCY_NOT_FOUND));
     }
 
-    const url = this.cfg.baseUrl + '/rest/paymentgate/order/create/';
+    const url = this.cfg.baseUrl + ORDER_CREATE;
     const payload = {
       shop_key: this.cfg.shopKey,
       amount: Math.round(input.amount),
       order_currency: Currency.TRY,
       payment_currency: Currency.TRY,
-      payment_method: 'online_bank_transfer',
+      payment_method: PAYMENT_METHOD,
       order_number: 'ord_' + Date.now(),
       payment_details: input.description ?? '',
       lang: 'EN',
@@ -69,7 +71,7 @@ export class DeCardAdapter implements PaymentGatewayPort {
         'decard',
         mapDecardStatus(data?.status),
         Number(data?.amount ?? payload.amount),
-        String(data?.payment_currency ?? 'TRY'),
+        String(data?.payment_currency ?? Currency.TRY),
         data?.token ?? data?.id,
       );
       return ok(payment);

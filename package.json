@@ -11,17 +11,7 @@
     "start": "nest start",
     "start:dev": "nest start --watch",
     "start:debug": "nest start --debug --watch",
-    "start:prod": "node dist/main",
-    "start:robot": "node dist/main.js robot ComonNotificationRunner",
-    "start:tests-report": "node dist/main.js tests-report",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
-    "test": "jest --maxWorkers=2",
-    "test:watch": "jest --watchAll",
-    "test:cov": "jest --coverage",
-    "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config ./test/jest-e2e.json",
-    "test:units": "jest --json --outputFile=/app/test-results/jest.json --maxWorkers=2",
-    "test:api-units": "jest --json --outputFile=../test-results/jest.json --maxWorkers=2"
   },
   "dependencies": {
     "@nestjs/axios": "^4.0.1",
